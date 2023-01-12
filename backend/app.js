@@ -20,10 +20,11 @@ app.use(cookieParser())
 // Import all routes
 const main = require('./routes/main');
 const auth = require('./routes/auth');
-
+const receipt = require('./routes/receipt');
 
 app.use('/api/v1', main)
 app.use('/api/v1', auth)
+app.use('/api/v1', receipt)
 
 
 // if (process.env.NODE_ENV === 'PRODUCTION') {
