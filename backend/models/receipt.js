@@ -13,7 +13,7 @@ const receiptSchema = new mongoose.Schema({
         maxLength: [100, 'email cannot exceed 100 characters']
     },
     mobileNo: {
-        type: Number,
+        type: String,
         maxLength: [11, 'Invalid Phone Number'],
         minLength: [11, 'Invalid Phone Number'],
     },
@@ -26,7 +26,7 @@ const receiptSchema = new mongoose.Schema({
         type: Number,
         maxLength: [7, 'Invalid Receipt Number'],
         minLength: [7, 'Invalid Receipt Number'],
-        unique: true,
+        // unique: true,
     },
     address: {
         type: String,

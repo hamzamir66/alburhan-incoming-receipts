@@ -1,5 +1,5 @@
 const Receipt = require('../models/receipt')
-
+const User = require('../models/user');
 const ErrorHandler = require('../utils/errorHandler');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 // const APIFeatures = require('../utils/apiFeatures')
@@ -8,7 +8,7 @@ const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 // Create new receipt   =>   /api/v1/receipt/new
 exports.newReceipt = catchAsyncErrors(async (req, res, next) => {
 
-    req.body.user = req.user.id;
+    // req.body.user = req.data.userId;
 
     const receipt = await Receipt.create(req.body);
 
@@ -29,6 +29,16 @@ exports.getAdminReceipts = catchAsyncErrors(async (req, res, next) => {
         receipts
     })
 
+})
+
+// Get my receipts   =>   /api/v1/myreceipts/:id
+exports.getMyReceipts = catchAsyncErrors(async (req, res, next) => {
+    const receipts = await Receipt.find({ user: req.params.id })
+
+    res.status(200).json({
+        success: true,
+        receipts
+    })
 })
 
 // Get single receipt details   =>   /api/v1/receipt/:id

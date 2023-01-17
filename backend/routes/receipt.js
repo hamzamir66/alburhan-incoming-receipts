@@ -5,7 +5,8 @@ const {
     newReceipt,
     getAdminReceipts,
     getSingleReceipt,
-    updateReceipt
+    updateReceipt,
+    getMyReceipts
 
 } = require('../controllers/receiptController')
 
@@ -13,11 +14,12 @@ const {
 
 const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth');
 
-router.route('/receipt/new').post(isAuthenticatedUser, newReceipt);
+router.route('/receipt/new').post(newReceipt);
 router.route('/receipt/:id')
-    .get(isAuthenticatedUser, getSingleReceipt)
-    .put(isAuthenticatedUser, updateReceipt);
+    .get(getSingleReceipt)
+    .put(updateReceipt);
 
+router.route('/myreceipts/:id').get(getMyReceipts)
 
 router.route('/admin/receipts').get(isAuthenticatedUser, authorizeRoles('admin'), getAdminReceipts);
 

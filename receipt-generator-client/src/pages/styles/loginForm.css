@@ -1,4 +1,8 @@
-.login-form {
+.loginHeading {
+  text-align: center;
+}
+
+/* .login-form {
   width: 300px;
   margin: 0 auto;
   padding: 20px;
@@ -33,4 +37,4 @@
 
 .login-button:hover {
   background-color: #45a049;
-}
+} */

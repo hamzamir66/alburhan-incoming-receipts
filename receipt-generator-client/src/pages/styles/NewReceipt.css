@@ -1,4 +1,13 @@
-.form {
+.form-add-btn {
+  float: right;
+}
+
+.form-remove-btn {
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+}
+
+/* .form {
     width: 50%;
     margin: 0 auto;
   }
@@ -40,4 +49,4 @@
     border: none;
     cursor: pointer;
   }
-  
+   */
