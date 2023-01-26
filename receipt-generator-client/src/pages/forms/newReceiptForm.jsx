@@ -66,7 +66,7 @@ function NewReceiptForm() {
         const submitData = {
             name: formData.name,
             email: formData.email,
-            phone: formData.phone,
+            mobileNo: formData.phone,
             referenceNo: formData.reference,
             address: formData.address,
             paymentDate: formData.paymentDate,
@@ -75,8 +75,7 @@ function NewReceiptForm() {
             user: userId
         };
         // console.log(submitData);
-        console.log(auth().id);
-        axios.post('http://localhost:5500/api/v1/receipt/new', submitData, userId)
+        axios.post('http://localhost:5500/api/v1/receipt/new', submitData, {withCredentials: true})
             .then((response) => {
                 if (response.status === 201) {
                     const receiptId = response.data.receipt._id

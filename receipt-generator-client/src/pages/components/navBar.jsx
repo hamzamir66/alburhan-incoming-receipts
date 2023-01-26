@@ -1,51 +1,81 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { useIsAuthenticated, useSignOut  } from 'react-auth-kit';
+import { useIsAuthenticated, useSignOut } from 'react-auth-kit';
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 
 
 function NavBar() {
 
-  const isAuthenticated = useIsAuthenticated();
-  const [ authenticated , setAuthenticated ] = useState();
-  const signOut = useSignOut();
-  const nav = useNavigate();
+	const isAuthenticated = useIsAuthenticated();
+	const [authenticated, setAuthenticated] = useState();
+	const [isAdmin, setIsAdmin] = useState(null);
+	const signOut = useSignOut();
+	const nav = useNavigate();
 
-  useEffect(()=>{
+	useEffect(() => {
 		setAuthenticated(isAuthenticated)
 	}, [isAuthenticated])
 
-  const signOutBtn = () => {
-    signOut();
-    nav('/login')
-  }
+	useEffect(() => {
+		axios.get("http://127.0.0.1:5500/api/v1/me", { withCredentials: true })
+			.then((response) => {
+				if (response.status === 200) {
+					if (response.data.user.role === 'admin') {
+						setIsAdmin(true);
+					}
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	}, [isAdmin])
 
-  return (
-    <Navbar bg="light" expand="md" className='mb-3'>
-      <Container>
-        <Navbar.Brand href="/">Al-Burhan</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            {
-              authenticated ? (
-                <> 
-                  <Nav.Link href="/receipt/new">New Receipt</Nav.Link>
-                  <Nav.Link href="/profile">Profile</Nav.Link>
-                  <Nav.Link href="" onClick={()=>signOutBtn()}>Logout</Nav.Link>
-                </>
-              ) : (
-                ''
-              )
-            }
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
-  );
+	const signOutBtn = () => {
+		signOut();
+		nav('/login')
+	}
+
+	const navLink = {
+		color: "white",
+	};
+
+	return (
+
+		<Navbar bg="dark" expand="md" className='mb-3' variant='dark'>
+			<Container>
+				<Navbar.Brand href="/">Al-Burhan</Navbar.Brand>
+				<Navbar.Toggle aria-controls="basic-navbar-nav" />
+				<Navbar.Collapse id="basic-navbar-nav">
+					<Nav className='me-auto'>
+					</Nav>
+					<Nav>
+						{
+							authenticated ? (
+								<>
+									<Nav.Link href="/receipt/new">New Receipt</Nav.Link>
+									<Nav.Link href="/profile">Profile</Nav.Link>
+									{
+										isAdmin ? (
+											<>
+												<Nav.Link href="/admin/register">Register User</Nav.Link>
+												<Nav.Link href="/admin/users">All Users</Nav.Link>
+												<Nav.Link href="/admin/receipts">All receipts</Nav.Link>
+											</>
+										) : ('')
+									}
+									<Nav.Link href="" onClick={() => signOutBtn()}>Logout</Nav.Link>
+								</>
+							) : ('')
+						}
+					</Nav>
+				</Navbar.Collapse>
+			</Container>
+		</Navbar>
+	);
 }
 
 export default NavBar;

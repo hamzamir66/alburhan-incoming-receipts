@@ -1,0 +1,6 @@
+@font-face {
+    font-family: "Urdu";
+    /*Can be any text*/
+    src: local("Nastaleeq"),
+        url("./assets/Nastaleeq.ttf") format("truetype");
+}

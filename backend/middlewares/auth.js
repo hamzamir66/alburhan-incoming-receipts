@@ -6,7 +6,6 @@ const catchAsyncErrors = require("./catchAsyncErrors");
 
 // Checks if user is authenticated or not
 exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
-
     const { token } = req.cookies
 
     if (!token) {

@@ -1,22 +1,25 @@
 {
   "name": "receipt-generator-client",
-  "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^2.0.0",
+    "antd": "^5.1.6",
     "axios": "^1.2.2",
+    "axios-cookiejar-support": "^4.0.6",
     "bootstrap": "^5.2.3",
+    "js-cookie": "^3.0.1",
     "react": "^18.2.0",
     "react-auth-kit": "^2.7.1",
     "react-bootstrap": "^2.7.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.6.2",
-    "react-to-print": "^2.14.11"
+    "react-to-print": "^2.14.11",
+    "tough-cookie": "^4.1.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",

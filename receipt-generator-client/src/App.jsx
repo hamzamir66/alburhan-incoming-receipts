@@ -6,6 +6,9 @@ import Home from './pages/home'
 import Profile from './pages/profile'
 import Receipt from './pages/receipt'
 import UpdateReceipt from './pages/updateReceipt'
+import AllUsers from './pages/allUsers'
+import Register from './pages/register'
+import AdminUser from './pages/adminUser'
 
 function App() {
 
@@ -41,6 +44,24 @@ function App() {
 					element={
 						<RequireAuth loginPath='/login'>
 							<UpdateReceipt />
+						</RequireAuth>
+					}></Route>
+				<Route path="/admin/users"
+					element={
+						<RequireAuth loginPath='/login'>
+							<AllUsers />
+						</RequireAuth>
+					}></Route>
+				<Route path="/admin/user/:id"
+					element={
+						<RequireAuth loginPath='/login'>
+							<AdminUser />
+						</RequireAuth>
+					}></Route>
+				<Route path="/admin/register"
+					element={
+						<RequireAuth loginPath='/login'>
+							<Register />
 						</RequireAuth>
 					}></Route>
 			</Routes>

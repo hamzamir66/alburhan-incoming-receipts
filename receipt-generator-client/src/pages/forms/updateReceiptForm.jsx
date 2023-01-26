@@ -23,9 +23,10 @@ function UpdateReceiptForm() {
         paymentEntries: [{ title: '', amount: '' }],
         totalAmount: 0
     });
+    const [prevAmount, setPrevAmount] = useState(0)
 	const url = `http://localhost:5500/api/v1/receipt/${id}`;
 	useEffect(() => {
-		axios.get(url)
+		axios.get(url, {withCredentials: true})
 			.then((response) => {
                 console.log(response.data.receipt);
                 const dateValue = new Date(response.data.receipt.paymentDate);
@@ -40,6 +41,7 @@ function UpdateReceiptForm() {
                     paymentEntries: response.data.receipt.paymentEntries,
                     totalAmount: response.data.receipt.totalAmount
                 })
+                setPrevAmount(response.data.receipt.totalAmount)
 			})
 			.catch((error) => {
 				console.log(error);
@@ -91,15 +93,16 @@ function UpdateReceiptForm() {
         const submitData = {
             name: formData.name,
             email: formData.email,
-            phone: formData.phone,
+            mobileNo: formData.phone,
             referenceNo: formData.reference,
             address: formData.address,
             paymentDate: formData.paymentDate,
             paymentEntries: formData.paymentEntries,
             totalAmount: formData.totalAmount,
+            prevAmount: prevAmount
         };
         // console.log(submitData);
-        axios.put(`http://localhost:5500/api/v1/receipt/${id}`, submitData)
+        axios.put(`http://localhost:5500/api/v1/receipt/${id}`, submitData, {withCredentials: true})
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response.data.receipt);

@@ -25,6 +25,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'user'
     },
+    amountDeposited: {
+        type: Number,
+        default: 0
+    },
+    amountToDeposit: {
+        type: Number,
+        default: 0
+    },
     createdAt: {
         type: Date,
         default: Date.now

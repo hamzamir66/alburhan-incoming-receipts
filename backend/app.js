@@ -4,8 +4,16 @@ const cors = require("cors");
 
 
 app.use(cors({
-    origin: "http://localhost:5173"
+    origin: "http://localhost:5173",
+    credentials: true,
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, X-PINGOTHER, Auth',
+    
 }));
+
+// app.use(
+//     cors('*')
+// )
+
 
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')

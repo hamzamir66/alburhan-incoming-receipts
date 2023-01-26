@@ -10,12 +10,23 @@ exports.newReceipt = catchAsyncErrors(async (req, res, next) => {
 
     // req.body.user = req.data.userId;
 
+    const userId = req.body.user;
+    const totalAmount = req.body.totalAmount;
+    const user = await User.findById(userId);
+    const newAmount = Number(totalAmount) + user.amountToDeposit;
+
+    const updateUser = await User.findOneAndUpdate(userId, {
+        amountToDeposit: newAmount
+    }, {
+        new: true
+    })
+
     const receipt = await Receipt.create(req.body);
 
     res.status(201).json({
         success: true,
         receipt
-    })
+    });
 })
 
 
@@ -31,9 +42,20 @@ exports.getAdminReceipts = catchAsyncErrors(async (req, res, next) => {
 
 })
 
+// Get single user receipts (admin)  =>  /api/v1/admin/receipts/user/:id
+exports.getUserReceipts = catchAsyncErrors(async (req, res, next) => {
+    const receipts = await Receipt.find({ user: req.params.id }).sort({ _id: -1 })
+
+    res.status(200).json({
+        success: true,
+        receipts
+    })
+})
+
+
 // Get my receipts   =>   /api/v1/myreceipts/:id
 exports.getMyReceipts = catchAsyncErrors(async (req, res, next) => {
-    const receipts = await Receipt.find({ user: req.params.id })
+    const receipts = await Receipt.find({ user: req.params.id }).sort({ _id: -1 })
 
     res.status(200).json({
         success: true,
@@ -60,12 +82,22 @@ exports.getSingleReceipt = catchAsyncErrors(async (req, res, next) => {
 
 // Update Receipt   =>   /api/v1/receipt/:id
 exports.updateReceipt = catchAsyncErrors(async (req, res, next) => {
-
     let receipt = await Receipt.findById(req.params.id);
-
     if (!receipt) {
         return next(new ErrorHandler('Receipt not found', 404));
     }
+    const prevAmount = req.body.prevAmount
+    const userId = req.user._id;
+    const totalAmount = req.body.totalAmount;
+    const user = await User.findById(userId);
+    const newAmount = (Number(totalAmount) - Number(prevAmount)) + user.amountToDeposit;
+
+    const updateUser = await User.findOneAndUpdate(userId, {
+        amountToDeposit: newAmount
+    }, {
+        new: true
+    })
+
 
     receipt = await Receipt.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
@@ -78,6 +110,27 @@ exports.updateReceipt = catchAsyncErrors(async (req, res, next) => {
         receipt
     })
 
+})
+
+
+// deposit amount    =>   /api/v1/user/depositamount/?amount=
+exports.depositAmount = catchAsyncErrors(async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+    const amount = req.query.amount;
+    const newAmount = user.amountDeposited + Number(amount);
+    const subtractedAmount = user.amountToDeposit - Number(amount);
+
+    const updateUser = await User.findOneAndUpdate(user.id, {
+        amountDeposited: newAmount,
+        amountToDeposit: subtractedAmount
+    }, {
+        new: true
+    })
+
+    res.status(200).json({
+        success: true,
+        user: updateUser
+    })
 })
 
 // Delete Receipt   =>   /api/v1/admin/product/:id
