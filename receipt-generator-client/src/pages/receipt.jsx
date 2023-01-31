@@ -22,6 +22,7 @@ function Receipt() {
 		receiptNo: '',
 		address: '',
 		paymentDate: '',
+		userName: '',
 		paymentEntries: [{ title: '', amount: '' }],
 		totalAmount: 0
 	});
@@ -218,6 +219,7 @@ function Receipt() {
 							<p>Reference No : {data.referenceNo}</p>
 							<p>Receipt No :{data.receiptNo}</p>
 							<p>Payment Date: {data.paymentDate}</p>
+							<p>Receipt Created By: {data.userName}</p>
 							<p>Total Amount: <span style={{'fontFamily': 'Urdu', 'fontSize': '24px'}}>
 								{numToUrdu(data.totalAmount).split(' ').reverse().join(' ')}</span></p>
 							<p>Payment Entries:</p>

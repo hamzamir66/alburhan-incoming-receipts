@@ -21,7 +21,6 @@ function Home() {
 		axios.get(url, { withCredentials: true })
 			.then((response) => {
 				setReceipts(response.data.receipts)
-				fixDates()
 			})
 			.catch((error) => {
 				console.log(error);
@@ -39,6 +38,7 @@ function Home() {
 	}, []);
 
 	const depositAmount = (amount) => {
+		console.log(user);
 		axios.post(`http://localhost:5500/api/v1/user/depositamount/?amount=${amount}`,
 			user, { withCredentials: true }
 		)

@@ -1,18 +1,28 @@
 import NavBar from "./components/navBar";
 import LoginForm from "./forms/loginForm";
 import { useIsAuthenticated } from 'react-auth-kit';
-import { Navigate } from "react-router-dom";
+// import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 
 
 function Login () {
     const isAuthenticated = useIsAuthenticated();
-    if (isAuthenticated) {
+    const navigate = useNavigate();
+    useEffect(() => {
+        console.log(isAuthenticated);
+        if (isAuthenticated() === true) {
+            navigate('/')
+        }
+    }, [])
+
+    if (isAuthenticated() ===true) {
         return (
-            <Navigate to="/" replace={true} />
+            ''
         )
     }
-    else {
+    else if(isAuthenticated() === false) {
         return (
             <>
                 <NavBar />

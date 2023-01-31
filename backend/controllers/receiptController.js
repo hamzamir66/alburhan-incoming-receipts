@@ -10,9 +10,9 @@ exports.newReceipt = catchAsyncErrors(async (req, res, next) => {
 
     // req.body.user = req.data.userId;
 
-    const userId = req.body.user;
+    const userId = req.user._id;
     const totalAmount = req.body.totalAmount;
-    const user = await User.findById(userId);
+    const user = await User.findById(userId);   
     const newAmount = Number(totalAmount) + user.amountToDeposit;
 
     const updateUser = await User.findOneAndUpdate(userId, {
@@ -33,7 +33,7 @@ exports.newReceipt = catchAsyncErrors(async (req, res, next) => {
 // Get all Receipts (Admin)  =>   /api/v1/admin/receipts
 exports.getAdminReceipts = catchAsyncErrors(async (req, res, next) => {
 
-    const receipts = await Receipt.find();
+    const receipts = await Receipt.find().sort({_id: -1});
 
     res.status(200).json({
         success: true,
@@ -120,7 +120,7 @@ exports.depositAmount = catchAsyncErrors(async (req, res, next) => {
     const newAmount = user.amountDeposited + Number(amount);
     const subtractedAmount = user.amountToDeposit - Number(amount);
 
-    const updateUser = await User.findOneAndUpdate(user.id, {
+    const updateUser = await User.findOneAndUpdate(user._id, {
         amountDeposited: newAmount,
         amountToDeposit: subtractedAmount
     }, {

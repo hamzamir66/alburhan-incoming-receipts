@@ -9,6 +9,7 @@ import UpdateReceipt from './pages/updateReceipt'
 import AllUsers from './pages/allUsers'
 import Register from './pages/register'
 import AdminUser from './pages/adminUser'
+import AdminReceipts from './pages/adminReceipts'
 
 function App() {
 
@@ -62,6 +63,12 @@ function App() {
 					element={
 						<RequireAuth loginPath='/login'>
 							<Register />
+						</RequireAuth>
+					}></Route>
+				<Route path="/admin/receipts"
+					element={
+						<RequireAuth loginPath='/login'>
+							<AdminReceipts />
 						</RequireAuth>
 					}></Route>
 			</Routes>

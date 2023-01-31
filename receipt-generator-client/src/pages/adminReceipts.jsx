@@ -8,32 +8,17 @@ import { useEffect } from "react";
 import axios from "axios";
 import { Card, List } from "antd";
 
-function AdminUser() {
+function AdminReceipts() {
 
-    const { id } = useParams()
-    const [userData, setUserData] = useState({
-        name: '',
-        email: '',
-        role: '',
-        amountDeposited: '',
-        amountToDeposit: ''
-    })
+
     const [receipts, setReceipts] = useState([]);
     const [receiptCount, setReceiptCount] = useState(0)
 
     useEffect(() => {
-        axios.get(`http://localhost:5500/api/v1/admin/user/${id}`, { withCredentials: true })
-            .then((response) => {
-                setUserData(response.data.user)
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }, [])
-    useEffect(() => {
-        axios.get(`http://localhost:5500/api/v1/admin/receipts/user/${id}`, { withCredentials: true })
+        axios.get(`http://localhost:5500/api/v1/admin/receipts`, { withCredentials: true })
             .then((response) => {
                 setReceipts(response.data.receipts)
+                console.log(response.data.receipts);
                 setReceiptCount(response.data.receipts.length)
             })
             .catch((error) => {
@@ -52,7 +37,8 @@ function AdminUser() {
             <Container>
                 <Row>
                     <Col lg={8}>
-                        <h5 className="mb-4">User Receipts</h5>
+                        <h5 className="mb-2">All Receipts </h5>
+                        <p className="mb-4">Receipts Count: {receiptCount}</p>
                         <List
                             itemLayout="horizontal"
                             dataSource={receipts}   
@@ -60,7 +46,7 @@ function AdminUser() {
                             renderItem={(item) => (
                                 <List.Item>
                                     <List.Item.Meta
-                                        title={'Name: ' + item.name}
+                                        title={'Name: ' + item.name + `, Posted by: ${item.userName}`}
                                         description={`Total: ${item.totalAmount}, date posted: ${new Intl.DateTimeFormat("en-PK", {
                                             day: "numeric",
                                             month: "short",
@@ -74,27 +60,10 @@ function AdminUser() {
                             )}
                         />
                     </Col>
-                    <Col lg={4}>
-                        <Card
-                            title="User Info"
-                            className="mb-3"
-                            hoverable='true'
-                            bodyStyle={styleText}
-                            headStyle={styleText}
-                        >
-                            <p>Name: {userData.name}</p>
-                            <p>Email: {userData.email}</p>
-                            <p>Role: {userData.role}</p>
-                            <p>Amount deposited: {userData.amountDeposited}</p>
-                            <p>Amount to deposit: {userData.amountToDeposit}</p>
-                            <p>Total receipts: {receiptCount}</p>
-
-                        </Card>
-                    </Col>
                 </Row>
             </Container>
         </>
     )
 }
 
-export default AdminUser;
+export default AdminReceipts;

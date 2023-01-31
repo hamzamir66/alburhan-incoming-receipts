@@ -23,7 +23,7 @@ router.route('/receipt/:id')
 
 router.route('/user/depositamount/').post(isAuthenticatedUser, depositAmount)
 router.route('/myreceipts/:id').get(isAuthenticatedUser, getMyReceipts)
-router.route('/admin/receipts').get(isAuthenticatedUser, authorizeRoles('admin'), getUserReceipts);
+router.route('/admin/receipts/user/:id').get(isAuthenticatedUser, authorizeRoles('admin'), getUserReceipts);
 router.route('/admin/receipts').get(isAuthenticatedUser, authorizeRoles('admin'), getAdminReceipts);
 
 

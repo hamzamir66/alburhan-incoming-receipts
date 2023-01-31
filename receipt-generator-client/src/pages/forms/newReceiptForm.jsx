@@ -21,6 +21,7 @@ function NewReceiptForm() {
         paymentEntries: [{ title: '', amount: '' }],
         totalAmount: 0
     });
+    const [userName, setUserName] = useState()
     const auth = useAuthUser()
     const nav = useNavigate();
 
@@ -59,6 +60,16 @@ function NewReceiptForm() {
         setFormData({ ...formData, totalAmount: total });
     }
 
+    useEffect(()=> {
+        axios.get('http://localhost:5500/api/v1/me', {withCredentials: true})
+        .then((response) => {
+            setUserName(response.data.user.name);
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+    },[])
+
     const handleSubmit = (event) => {
         event.preventDefault();
         calculateTotalAmount();
@@ -72,6 +83,7 @@ function NewReceiptForm() {
             paymentDate: formData.paymentDate,
             paymentEntries: formData.paymentEntries,
             totalAmount: formData.totalAmount,
+            userName: userName,
             user: userId
         };
         // console.log(submitData);
