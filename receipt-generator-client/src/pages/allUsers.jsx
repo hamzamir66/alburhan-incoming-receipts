@@ -1,12 +1,11 @@
 import NavBar from "./components/navBar";
-import axios from "axios";
+import instance from "./instance";
 import { useAuthUser } from 'react-auth-kit'
 import { useState } from "react";
 import { useEffect } from "react";
 import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
 import Col from "react-bootstrap/esm/Col";
-import { Link } from "react-router-dom";
 import { List } from 'antd';
 
 function AllUsers() {
@@ -16,7 +15,7 @@ function AllUsers() {
     const [users, setUsers] = useState([])
 
     useEffect(() => {
-        axios.get("http://127.0.0.1:5500/api/v1/me", { withCredentials: true })
+        instance.get("me", { withCredentials: true })
             .then((response) => {
                 if (response.status === 200) {
                     if (response.data.user.role === 'admin') {
@@ -34,7 +33,7 @@ function AllUsers() {
 
     useEffect(() => {
         if (isAdmin === true) {
-            axios.get("http://127.0.0.1:5500/api/v1/admin/users", { withCredentials: true })
+            instance.get("admin/users", { withCredentials: true })
                 .then((response) => {
                     if (response.status === 200) {
                         console.log(response.data.users);

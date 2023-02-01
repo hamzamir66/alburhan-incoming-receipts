@@ -4,8 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { useIsAuthenticated, useSignOut } from 'react-auth-kit';
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
-
+import instance from '../instance';
 
 
 function NavBar() {
@@ -21,7 +20,7 @@ function NavBar() {
 	}, [isAuthenticated])
 
 	useEffect(() => {
-		axios.get("http://127.0.0.1:5500/api/v1/me", { withCredentials: true })
+		instance.get("me", { withCredentials: true })
 			.then((response) => {
 				if (response.status === 200) {
 					if (response.data.user.role === 'admin') {
@@ -30,7 +29,6 @@ function NavBar() {
 				}
 			})
 			.catch((error) => {
-				console.error(error);
 			});
 	}, [isAdmin])
 

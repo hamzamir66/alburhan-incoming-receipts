@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from "axios";
+import instance from '../instance';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -24,9 +24,9 @@ function UpdateReceiptForm() {
         totalAmount: 0
     });
     const [prevAmount, setPrevAmount] = useState(0)
-	const url = `http://localhost:5500/api/v1/receipt/${id}`;
+	const url = `receipt/${id}`;
 	useEffect(() => {
-		axios.get(url, {withCredentials: true})
+		instance.get(url, {withCredentials: true})
 			.then((response) => {
                 console.log(response.data.receipt);
                 const dateValue = new Date(response.data.receipt.paymentDate);
@@ -102,7 +102,7 @@ function UpdateReceiptForm() {
             prevAmount: prevAmount
         };
         // console.log(submitData);
-        axios.put(`http://localhost:5500/api/v1/receipt/${id}`, submitData, {withCredentials: true})
+        instance.put(`receipt/${id}`, submitData, {withCredentials: true})
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response.data.receipt);

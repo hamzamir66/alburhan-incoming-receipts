@@ -5,7 +5,7 @@ import App from './App'
 import './index.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./assets/Nastaleeq.ttf"
-
+import "./assets/Kasheeda.ttf"
 import { AuthProvider } from 'react-auth-kit'
 
 

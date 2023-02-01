@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import instance from "../instance";
 import '../styles/loginForm.css';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -36,7 +36,7 @@ function RegisterForm() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (isMatch === true) {
-            axios.post("http://127.0.0.1:5500/api/v1/admin/register", { name, email, password }, { withCredentials: true })
+            instance.post("admin/register", { name, email, password }, { withCredentials: true })
                 .then((response) => {
                     if (response.status === 200) {
                         console.log(response.data);

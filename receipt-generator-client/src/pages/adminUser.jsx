@@ -5,7 +5,7 @@ import Col from "react-bootstrap/esm/Col";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
-import axios from "axios";
+import instance from "./instance";
 import { Card, List } from "antd";
 
 function AdminUser() {
@@ -22,7 +22,7 @@ function AdminUser() {
     const [receiptCount, setReceiptCount] = useState(0)
 
     useEffect(() => {
-        axios.get(`http://localhost:5500/api/v1/admin/user/${id}`, { withCredentials: true })
+        instance.get(`admin/user/${id}`, { withCredentials: true })
             .then((response) => {
                 setUserData(response.data.user)
             })
@@ -31,7 +31,7 @@ function AdminUser() {
             });
     }, [])
     useEffect(() => {
-        axios.get(`http://localhost:5500/api/v1/admin/receipts/user/${id}`, { withCredentials: true })
+        instance.get(`receipts/user/${id}`, { withCredentials: true })
             .then((response) => {
                 setReceipts(response.data.receipts)
                 setReceiptCount(response.data.receipts.length)

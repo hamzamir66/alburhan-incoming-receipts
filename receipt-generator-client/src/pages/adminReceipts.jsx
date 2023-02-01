@@ -2,11 +2,10 @@ import NavBar from "./components/navBar";
 import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
 import Col from "react-bootstrap/esm/Col";
-import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
-import axios from "axios";
-import { Card, List } from "antd";
+import instance from "./instance";
+import { List } from "antd";
 
 function AdminReceipts() {
 
@@ -15,7 +14,7 @@ function AdminReceipts() {
     const [receiptCount, setReceiptCount] = useState(0)
 
     useEffect(() => {
-        axios.get(`http://localhost:5500/api/v1/admin/receipts`, { withCredentials: true })
+        instance.get(`admin/receipts`, { withCredentials: true })
             .then((response) => {
                 setReceipts(response.data.receipts)
                 console.log(response.data.receipts);

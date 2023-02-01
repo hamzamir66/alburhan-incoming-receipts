@@ -1,4 +1,4 @@
-import axios from "axios";
+import instance from "./instance";
 import { useEffect } from "react";
 import { useState } from "react";
 import NavBar from "./components/navBar";
@@ -15,10 +15,10 @@ function Home() {
 	const [user, setUser] = useState([]);
 	const auth = useAuthUser();
 	const userId = auth().id;
-	const url = `http://localhost:5500/api/v1/myreceipts/${userId}`;
+	const url = `myreceipts/${userId}`;
 
 	useEffect(() => {
-		axios.get(url, { withCredentials: true })
+		instance.get(url, { withCredentials: true })
 			.then((response) => {
 				setReceipts(response.data.receipts)
 			})
@@ -28,7 +28,7 @@ function Home() {
 	}, []);
 
 	useEffect(() => {
-		axios.get('http://localhost:5500/api/v1/me', { withCredentials: true })
+		instance.get('me', { withCredentials: true })
 			.then((response) => {
 				setUser(response.data.user)
 			})
@@ -39,7 +39,7 @@ function Home() {
 
 	const depositAmount = (amount) => {
 		console.log(user);
-		axios.post(`http://localhost:5500/api/v1/user/depositamount/?amount=${amount}`,
+		instance.post(`user/depositamount/?amount=${amount}`,
 			user, { withCredentials: true }
 		)
 			.then((response) => {

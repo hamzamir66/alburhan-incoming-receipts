@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import instance from "../instance";
 import '../styles/loginForm.css';
 import { useSignIn } from "react-auth-kit";
 import Container from 'react-bootstrap/Container';
@@ -19,7 +19,7 @@ function LoginForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post("http://127.0.0.1:5500/api/v1/login", { email, password }, {withCredentials: true})
+        instance.post("login", { email, password }, {withCredentials: true})
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response.data.user._id);

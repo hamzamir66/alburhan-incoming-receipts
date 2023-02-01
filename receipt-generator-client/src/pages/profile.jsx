@@ -2,7 +2,7 @@ import React from "react";
 import NavBar from "./components/navBar";
 import { useState } from "react";
 import { useEffect } from "react";
-import axios from "axios";
+import instance from "./instance";
 import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
 import Col from "react-bootstrap/esm/Col";
@@ -20,7 +20,7 @@ function Profile() {
 
 
     useEffect(() => {
-        axios.get('http://localhost:5500/api/v1/me', { withCredentials: true })
+        instance.get('me', { withCredentials: true })
             .then((response) => {
                 setUserData(response.data.user);
             })

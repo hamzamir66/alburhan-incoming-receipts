@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from "axios";
+import instance from '../instance';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -61,7 +61,7 @@ function NewReceiptForm() {
     }
 
     useEffect(()=> {
-        axios.get('http://localhost:5500/api/v1/me', {withCredentials: true})
+        instance.get('me', {withCredentials: true})
         .then((response) => {
             setUserName(response.data.user.name);
         })
@@ -87,7 +87,7 @@ function NewReceiptForm() {
             user: userId
         };
         // console.log(submitData);
-        axios.post('http://localhost:5500/api/v1/receipt/new', submitData, {withCredentials: true})
+        instance.post('receipt/new', submitData, {withCredentials: true})
             .then((response) => {
                 if (response.status === 201) {
                     const receiptId = response.data.receipt._id

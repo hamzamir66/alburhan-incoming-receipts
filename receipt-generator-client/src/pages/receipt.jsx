@@ -8,6 +8,8 @@ import Row from "react-bootstrap/esm/Row";
 import Button from 'react-bootstrap/Button';
 import ReactToPrint from 'react-to-print';
 import { useNavigate } from "react-router-dom";
+import QRCode from 'qrcode.react';
+import './styles/printDiv.css'
 
 
 function Receipt() {
@@ -23,6 +25,7 @@ function Receipt() {
 		address: '',
 		paymentDate: '',
 		userName: '',
+		createdAt: '',
 		paymentEntries: [{ title: '', amount: '' }],
 		totalAmount: 0
 	});
@@ -173,15 +176,27 @@ function Receipt() {
 	}
 	const url = `http://localhost:5500/api/v1/receipt/${id}`;
 	useEffect(() => {
-		axios.get(url, {withCredentials: true})
+		axios.get(url, { withCredentials: true })
 			.then((response) => {
 				const rawData = response.data.receipt
 				const date = new Date(response.data.receipt.paymentDate);
 				let year = date.getFullYear();
 				let month = date.getMonth();
 				let day = date.getDate();
-				const newPaymentDate = `${day}-${month+1}-${year}`
+				const newPaymentDate = `${day}-${month + 1}-${year}`
 				rawData.paymentDate = newPaymentDate
+				const date2 = new Date(response.data.receipt.createdAt)
+				let year2 = date2.getFullYear();
+				let month2 = date2.getMonth();
+				let day2 = date2.getDate();
+				let hour = date2.getHours();
+				let ampm = hour >= 12 ? 'pm' : 'am';
+				hour = hour % 12;
+				hour = hour ? hour : 12; 
+				let minutes = date2.getMinutes();
+				let time = hour + ':' + minutes + ' ' + ampm;
+				const newCreatedAt = `${day2}-${month2+ 1}-${year2}, ${time}`
+				rawData.createdAt = newCreatedAt
 				setData({ ...response.data.receipt })
 			})
 			.catch((error) => {
@@ -195,7 +210,7 @@ function Receipt() {
 	const styles = {
 		'@media print': {
 			'@page': {
-				size: 'A5',
+				size: 'A4',
 				margin: '0'
 			}
 		}
@@ -211,8 +226,105 @@ function Receipt() {
 				/><Button variant="success" onClick={() => editButton()} className="mb-3 ms-2">Edit</Button>
 				<Row>
 					<Col>
-						<div ref={printRef} style={styles}>
-							<p>Name: {data.name}</p>
+						<div ref={printRef} style={styles} className='printDivMain'>
+							<div className="dateGeneration">
+								<p className="dateGenerationText">Generated on: {data.createdAt}</p>
+							</div>
+							<div className="receiptDetailsOuter">
+								<div className="receiptDetailsInner">
+									<div className="date">
+										<p className="dateTitle">:تاریخ</p>
+										<span className="dateText">{data.createdAt.split(',')[0]}</span>
+									</div>
+									<div className="receiptNo">
+										<p className="receiptNoTitle">:رسید نمبر</p>
+										<span className="receiptNoText">{data.receiptNo}</span>
+									</div>
+									<div className="referenceNo">
+										<p className="referenceNoTitle">:حوالہ نمبر</p>
+										<span className="referenceNoText">{data.referenceNo}</span>
+									</div>
+								</div>
+							</div>
+							<div className="personalDetails">
+								<div style={{ 'position': 'relative' }} >
+									<div className="name">
+										:نام
+									</div>
+									<div className="nameText">
+										{data.name}
+									</div>
+									<div className="number">
+										:نمبر
+									</div>
+									<div className="numberText">
+										{data.mobileNo}
+									</div>
+									<div className="address">
+										:ایڈریس
+									</div>
+									<div className="addressText">
+										{data.address}
+									</div>
+									<div className="paymentDate">
+										:رقم جمع کروانے کی تاریخ
+									</div>
+									<div className="paymentDateText">
+										{data.paymentDate}
+									</div>
+									<div className="email">
+										:ای میل
+									</div>
+									<div className="emailText">
+										{data.email}
+									</div>
+								</div>
+							</div>
+							<div className="QRcode">
+								<QRCode size={90} value={`Receipt No: ${data.receiptNo} , Reference No: ${data.referenceNo}`} />
+							</div>
+							<div className="user">
+								<div style={{ 'position': 'relative' }} >
+									<div className="userTitle">اجرا کننددہ</div>
+									<div className="userName">
+										<p>{data.userName}</p></div>
+								</div>
+							</div>
+							<div className="paymentDiv">
+								<div style={{ 'position': 'relative' }}>
+									<div className="label1">نمبر شمار</div>
+									<div className="label2">مد</div>
+									<div className="label3">رقم</div>
+									<table className="amountTable">
+										<tr className="entryAmount">
+											{data.paymentEntries.map((entry, index) => (
+												<div key={entry.title + index}>
+													<td>{entry.amount}</td>
+												</div>
+											))}
+										</tr>
+										<tr className="entryTitle">
+											{data.paymentEntries.map((entry, index) => (
+												<div key={entry.title + index}>
+													<td>{entry.title}</td>
+												</div>
+											))}
+										</tr>
+										<tr className="entryIndex">
+											{data.paymentEntries.map((entry, index) => (
+												<div key={entry.title + index}>
+													<td>{index + 1}</td>
+												</div>
+											))}
+										</tr>
+									</table>
+									<div className="meezan">میزان</div>
+									<div className="totalNumeric">{data.totalAmount.toLocaleString()}/=</div>
+								</div>
+							</div>
+							<div className="totalUrdu">{numToUrdu(data.totalAmount).split(' ').reverse().join(' ')}روپے</div>
+							<div className="caption">This is a system generated receipt</div>
+							{/* <p>Name: <span></span> {data.name}</p>
 							<p>Email: {data.email}</p>
 							<p>Phone: {data.mobileNo}</p>
 							<p>Address: {data.address}</p>
@@ -229,7 +341,7 @@ function Receipt() {
 										<p>{index + 1} Title: {entry.title} - amount: {entry.amount}</p>
 									</div>
 								))}
-							</ul>
+							</ul> */}
 						</div>
 					</Col>
 				</Row>

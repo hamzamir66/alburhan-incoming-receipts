@@ -4,3 +4,10 @@
     src: local("Nastaleeq"),
         url("./assets/Nastaleeq.ttf") format("truetype");
 }
+
+@font-face {
+    font-family: "Kasheeda";
+    /*Can be any text*/
+    src: local("Kasheeda"),
+        url("./assets/Kasheeda.ttf") format("truetype");
+}
