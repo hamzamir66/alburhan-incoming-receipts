@@ -15,6 +15,7 @@
     "nodemon": "^2.0.20"
   },
   "scripts": {
-    "dev": "nodemon backend/server.js"
+    "dev": "nodemon backend/app.js",
+    "start": "node backend/app.js"
   }
 }
