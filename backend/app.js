@@ -1,56 +1,35 @@
-const express = require('express');
-const app = express();
-const cors = require("cors");
+const app = require('./main')
+const connectDatabase = require('./config/database')
 
+const dotenv = require('dotenv');
 
-app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, X-PINGOTHER, Auth',
-    
-}));
+// Handle Uncaught exceptions
+process.on('uncaughtException', err => {
+    console.log(`ERROR: ${err.stack}`);
+    console.log('Shutting down due to uncaught exception');
+    process.exit(1)
+})
 
-// app.use(
-//     cors('*')
-// )
-
-
-const cookieParser = require('cookie-parser')
-const bodyParser = require('body-parser')
-// const dotenv = require('dotenv');
-const path = require('path')
-
-const errorMiddleware = require('./middlewares/errors')
-
-// Setting up config file 
+// Setting up config file
 if (process.env.NODE_ENV !== 'PRODUCTION') require('dotenv').config({ path: 'backend/config/config.env' })
-// dotenv.config({ path: 'backend/config/config.env' })
 
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser())
+dotenv.config({ path: 'backend/config/config.env' })
 
 
-// Import all routes
-const main = require('./routes/main');
-const auth = require('./routes/auth');
-const receipt = require('./routes/receipt');
-
-app.use('/api/v1', main)
-app.use('/api/v1', auth)
-app.use('/api/v1', receipt)
+// Connecting to database
+connectDatabase();
 
 
-// if (process.env.NODE_ENV === 'PRODUCTION') {
-//     app.use(express.static(path.join(__dirname, '../frontend/build')))
 
-//     app.get('*', (req, res) => {
-//         res.sendFile(path.resolve(__dirname, '../frontend/build/index.html'))
-//     })
-// }
+const server = app.listen(process.env.PORT, () => {
+    console.log(`Server started on PORT: ${process.env.PORT} in ${process.env.NODE_ENV} mode.`)
+})
 
-
-// Middleware to handle errors
-app.use(errorMiddleware);
-
-module.exports = app
+// Handle Unhandled Promise rejections
+process.on('unhandledRejection', err => {
+    console.log(`ERROR: ${err.stack}`);
+    console.log('Shutting down the server due to Unhandled Promise rejection');
+    server.close(() => {
+        process.exit(1)
+    })
+})
